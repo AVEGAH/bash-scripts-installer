@@ -82,7 +82,28 @@ if [[ $1 ]]; then
             fi
             ;;
         *)
-            echo -e "${RED}Invalid option. Try again.${NC}"
+            if [[ $1 == "maptech" ]]; then
+                show_options
+                prompt_for_option
+                option_number=$?
+                if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
+                    i=1
+                    for key in "${!scripts[@]}"; do
+                        if (( i == option_number )); then
+                            install_script "${scripts[$key]}"
+                            exit 0
+                        fi
+                        ((i++))
+                    done
+                elif (( option_number == ${#scripts[@]} + 1 )); then
+                    echo "None selected."
+                    exit 0
+                else
+                    echo -e "${RED}Invalid option number.${NC}"
+                fi
+            else
+                echo -e "${RED}Invalid option. Try again.${NC}"
+            fi
             ;;
     esac
 else
