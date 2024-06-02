@@ -41,6 +41,10 @@ execute_action() {
         "send_verification_code")
             send_verification_code
             ;;
+        "cancel")
+            echo -e "${YELLOW}Installation canceled.${NC}"
+            exit 0
+            ;;
         *)
             if [[ ${scripts[$action]} ]]; then
                 install_script "${scripts[$action]}"
@@ -109,7 +113,7 @@ install_selected_script() {
     show_options
     prompt_for_option
     option_number=$?
-    if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
+    if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
         i=1
         for key in "${!scripts[@]}"; do
             if (( i == option_number )); then
@@ -118,6 +122,9 @@ install_selected_script() {
             fi
             ((i++))
         done
+        if (( option_number == ${#scripts[@]} + 1 )); then
+            execute_action "cancel"
+        fi
     else
         echo -e "${RED}Invalid option number.${NC}"
         exit 1
@@ -132,6 +139,7 @@ show_options() {
         echo "| $i) $key"
         ((i++))
     done
+    echo "| $i) Cancel"
     echo -e "-------------------------------------"
 }
 
@@ -139,7 +147,7 @@ show_options() {
 prompt_for_option() {
     read -p "Enter the number corresponding to your choice: " option_number
     if [[ $option_number =~ ^[0-9]+$ ]]; then
-        if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
+        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
             return $option_number
         fi
     fi
