@@ -2,8 +2,8 @@
 
 # Define the list of commands
 declare -A scripts
-scripts["Update and run hehe script"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
-scripts["Download and run UDPserver script"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
+scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
+scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
 
 # Colors
 RED='\033[0;31m'
@@ -15,12 +15,15 @@ NC='\033[0m' # No Color
 # ASCII Art Header
 show_header() {
     echo -e "${BLUE}"
-    echo "  ____             _            ____            _       _     "
-    echo " |  _ \  ___  _ __| |_ ___ _ __|  _ \ ___  __ _(_) __ _| |___ "
-    echo " | | | |/ _ \| '__| __/ _ \ '__| |_) / _ \/ _\` | |/ _\` | / __|"
-    echo " | |_| | (_) | |  | ||  __/ |  |  __/  __/ (_| | | (_| | \__ \\"
-    echo " |____/ \___/|_|   \__\___|_|  |_|   \___|\__, |_|\__,_|_|___/"
-    echo "                                        |___/                "
+    echo "  M       A       P       T       E       C       H   "
+    echo " (M)     (A)     (P)     (T)     (E)     (C)     (H)  "
+    echo "  /       /       /       /       /       /       /   "
+    echo " (M)     (A)     (P)     (T)     (E)     (C)     (H)  "
+    echo "  /       /       /       /       /       /       /   "
+    echo " (M)     (A)     (P)     (T)     (E)     (C)     (H)  "
+    echo "  /       /       /       /       /       /       /   "
+    echo " (M)     (A)     (P)     (T)     (E)     (C)     (H)  "
+    echo "                                                      "
     echo -e "${NC}"
 }
 
@@ -52,7 +55,7 @@ install_script() {
     eval "$command"
 }
 
-# Show the header once
+# Show the header once at the start
 show_header
 
 # Show the menu
