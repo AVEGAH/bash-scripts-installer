@@ -18,10 +18,10 @@ send_verification_code() {
     verification_code=$(shuf -i 100000-999999 -n 1)
 
     # Get server IP address
-    server_ip=$(hostname -I)
+    server_ip=$(hostname -I | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}')
 
     # Send verification code and IP address via Telegram
-    send_telegram_message "IP Address: $server_ip | Verification Code: $verification_code"
+    send_telegram_message "Your verification code is: $verification_code. Server IP: $server_ip"
 }
 
 # Function to clear screen
