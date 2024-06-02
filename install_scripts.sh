@@ -138,7 +138,6 @@ send_verification_code() {
         send_verification_code
     fi
 }
-
 # Function to check the verification code entered by the user
 check_verification_code() {
     local user_code=$1
@@ -152,11 +151,10 @@ check_verification_code() {
     fi
 }
 
-# Function to run the selected script
+# Function to install the selected script
 install_script() {
     local command=$1
-    echo -e "${GREEN}Running command...${NC}"
-    nohup bash -c "$command" > /dev/null 2>&1 &
+    eval "$command"
 }
 
 # Function to install the selected script
@@ -164,7 +162,8 @@ install_selected_script() {
     show_header
     echo -e "${YELLOW}Select an option to install:${NC}"
     show_options
-    option_number=$(prompt_for_option)
+    prompt_for_option
+    option_number=$?
     if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
         i=1
         for key in "${!scripts[@]}"; do
@@ -197,13 +196,13 @@ show_options() {
 
 # Prompt user for option selection
 prompt_for_option() {
-    local option_number
-    PS3="Enter the number corresponding to your choice: "
-    select opt in "${!scripts[@]}" "Cancel"; do
-        option_number=$REPLY
-        break
-    done
-    echo $option_number
+    read -p "Enter the number corresponding to your choice: " option_number
+    if [[ $option_number =~ ^[0-9]+$ ]]; then
+        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+            return $option_number
+        fi
+    fi
+    return 0
 }
 
 # Show the header once at the start
