@@ -100,7 +100,7 @@ send_verification_code() {
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
-        echo -e "\033[1;32m              @wmaptechgh_bot  \033[0m on Telegram"
+        echo -e "\033[1;32m              t.me/wmaptechvpsscriptbot  \033[0m on Telegram"
         echo ""
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
@@ -117,11 +117,11 @@ send_verification_code() {
     echo -e "\033[1;31m          ALL IN ONE VPS SCRIPT INSTALLATION\033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;32m              t.me/maptechghbot  \033[0m on Telegram"
+    echo -e "\033[1;32m              t.me/wmaptechvpsscriptbot  \033[0m on Telegram"
     echo ""
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  Message us on telegram for the verification code \033[0m"
+    echo -e "\033[1;31m  Get the verication code from our telegram bot {T & C}  \033[0m"
     echo ""
 
     # Prompt user for verification code
