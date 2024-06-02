@@ -95,7 +95,7 @@ send_verification_code() {
         local minutes=$((time_left / 60))
         local seconds=$((time_left % 60))
 
-       # Display the message with the remaining time
+        # Display the message with the remaining time
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
@@ -124,6 +124,25 @@ send_verification_code() {
     echo -e "\033[1;31m  Message us on telegram for the verification code \033[0m"
     echo ""
 
+    # Give two more chances to enter the correct verification code
+    local attempts=0
+    while [ $attempts -lt 3 ]; do
+        read -p "Enter the verification code received (Attempts left: $((3 - attempts))): " user_code
+        if [[ "$user_code" == "$verification_code" ]]; then
+            echo -e "${GREEN}Verification successful.${NC}"
+            # Store the code along with the IP address and current time in the storage file
+            echo "$ipv4_address $verification_code $current_time" >> "$VCHECK_FILE"
+            install_selected_script
+            return
+        else
+            echo -e "${RED}Incorrect verification code.${NC}"
+            ((attempts++))
+        fi
+    done
+
+    echo -e "${RED}Maximum attempts reached. Exiting.${NC}"
+    exit 1
+}
     # Prompt user for verification code
     read -p "Enter the verification code received: " user_code
 
