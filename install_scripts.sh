@@ -26,20 +26,35 @@ show_header() {
 
 # Function to display the menu
 show_menu() {
-    echo -e "${YELLOW}Choose a script to install:${NC}"
+    echo -e "${YELLOW}INTERNET-DOCTORS VPS SCRIPTS, please select an option:${NC}"
+    echo -e "┌────────────────────────────────────────────────────────────────────┐"
+    echo -e "│ 1) SSH                                                             │"
+    echo -e "│ 2) UDP REQUEST                                                     │"
+    echo -e "│ 3) Quit                                                            │"
+    echo -e "└────────────────────────────────────────────────────────────────────┘"
     PS3="Enter your choice: "
-    select option in "${!scripts[@]}" "Quit"; do
+    select option in "SSH" "UDP REQUEST" "Quit"; do
         case $option in
+            "SSH")
+                if [[ -n "${scripts["SSH"]}" ]]; then
+                    install_script "${scripts["SSH"]}"
+                else
+                    echo -e "${RED}Invalid option. Try again.${NC}"
+                fi
+                ;;
+            "UDP REQUEST")
+                if [[ -n "${scripts["UDP REQUEST"]}" ]]; then
+                    install_script "${scripts["UDP REQUEST"]}"
+                else
+                    echo -e "${RED}Invalid option. Try again.${NC}"
+                fi
+                ;;
             "Quit")
                 echo -e "${RED}Exiting.${NC}"
                 exit 0
                 ;;
             *)
-                if [[ -n "${scripts[$option]}" ]]; then
-                    install_script "${scripts[$option]}"
-                else
-                    echo -e "${RED}Invalid option. Try again.${NC}"
-                fi
+                echo -e "${RED}Invalid option. Try again.${NC}"
                 ;;
         esac
     done
