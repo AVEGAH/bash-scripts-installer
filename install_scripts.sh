@@ -47,6 +47,17 @@ show_options() {
     echo -e "-------------------------------------"
 }
 
+# Prompt user for option selection
+prompt_for_option() {
+    read -p "Enter the number corresponding to your choice: " option_number
+    if [[ $option_number =~ ^[0-9]+$ ]]; then
+        if (( option_number > 0 && option_number <= (${#scripts[@]} + 1) )); then
+            return $option_number
+        fi
+    fi
+    return 0
+}
+
 # Run the selected script
 if [[ $1 ]]; then
     case $1 in
@@ -76,4 +87,21 @@ if [[ $1 ]]; then
     esac
 else
     show_options
+    prompt_for_option
+    option_number=$?
+    if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
+        i=1
+        for key in "${!scripts[@]}"; do
+            if (( i == option_number )); then
+                install_script "${scripts[$key]}"
+                exit 0
+            fi
+            ((i++))
+        done
+    elif (( option_number == ${#scripts[@]} + 1 )); then
+        echo "None selected."
+        exit 0
+    else
+        echo -e "${RED}Invalid option number.${NC}"
+    fi
 fi
