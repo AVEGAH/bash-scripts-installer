@@ -8,6 +8,7 @@ CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
 declare -A scripts
 scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
 scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
+scripts["hiddify"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
 
 # Colors
 RED='\033[0;31m'
@@ -95,8 +96,6 @@ send_verification_code() {
         local minutes=$((time_left / 60))
         local seconds=$((time_left % 60))
 
-       # Display the message with the remaining time
-        echo -e "\033[1;36m======================================================================================\033[0m"
        # Display the message with the remaining time
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
