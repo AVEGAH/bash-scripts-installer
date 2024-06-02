@@ -38,11 +38,31 @@ show_header() {
     echo -e "${NC}"
 }
 
-# Function to run the selected script
-install_script() {
-    local command=$1
-    eval "$command" > /dev/null  # Redirect output to /dev/null to suppress it
+# Function to install the selected script
+install_selected_script() {
+    show_header
+    echo -e "${YELLOW}Select an option to install:${NC}"
+    show_options
+    prompt_for_option
+    option_number=$?
+    if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+        i=1
+        for key in "${!scripts[@]}"; do
+            if (( i == option_number )); then
+                execute_action "$key"  # Execute the selected action directly
+                exit 0
+            fi
+            ((i++))
+        done
+        if (( option_number == ${#scripts[@]} + 1 )); then
+            execute_action "cancel"
+        fi
+    else
+        echo -e "${RED}Invalid option number.${NC}"
+        exit 1
+    fi
 }
+
 
 
 # Function to send message via Telegram including IPv4 address
