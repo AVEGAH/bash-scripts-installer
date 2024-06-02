@@ -23,6 +23,8 @@ show_header() {
     echo "  | |  | | |_) || |  | | |__| | |    | |__| |____) |_| |_| |\  |"
     echo "  |_|  |_|____/ |_|  |_|\____/|_|     \____/|_____/|_____|_| \_|"
     echo "                                                                "
+    echo "                             MAPTECH-GH                             "
+    echo "                                                                "
     echo "                     INTERNET-DOCTORS VPS SCRIPTS, please select an option:"
     echo "  ┌────────────────────────────────────────────────────────────────────┐"
     echo "  │ 1. SSH installation                                                 │"
@@ -39,7 +41,7 @@ show_header() {
 
 # Function to display the menu
 show_menu() {
-    echo -e "${YELLOW}Choose a script to install:${NC}"
+    echo -e "${YELLOW}Choose an option:${NC}"
     PS3="Enter your choice: "
     select option in "${!scripts[@]}" "Quit"; do
         case $option in
