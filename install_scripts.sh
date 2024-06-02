@@ -12,8 +12,14 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Function to clear screen
+clear_screen() {
+    clear
+}
+
 # ASCII Art Header
 show_header() {
+    clear_screen
     echo -e "${BLUE}"
     echo "███╗   ███╗ █████╗ ██████╗ ████████╗███████╗ ██████╗██╗  ██╗"
     echo "████╗ ████║██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██╔════╝██║  ██║"
