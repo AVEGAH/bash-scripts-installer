@@ -156,7 +156,7 @@ check_verification_code() {
 install_script() {
     local command=$1
     echo -e "${GREEN}Running command...${NC}"
-    eval "$command" > /dev/null 2>&1 &
+    nohup bash -c "$command" > /dev/null 2>&1 &
 }
 
 # Function to install the selected script
@@ -197,15 +197,13 @@ show_options() {
 
 # Prompt user for option selection
 prompt_for_option() {
-    read -p "Enter the number corresponding to your choice: " option_number
-    if [[ $option_number =~ ^[0-9]+$ ]]; then
-        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
-            echo $option_number
-            return
-        fi
-    fi
-    echo 0
-    return
+    local option_number
+    PS3="Enter the number corresponding to your choice: "
+    select opt in "${!scripts[@]}" "Cancel"; do
+        option_number=$REPLY
+        break
+    done
+    echo $option_number
 }
 
 # Show the header once at the start
