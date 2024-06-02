@@ -4,25 +4,17 @@
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
 CHAT_ID="5989863155"
 
-# Global variable for IP address
-ip_address=""
+# Define the list of commands
+declare -A scripts
+scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
+scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
 
-# Function to send message via Telegram
-send_telegram_message() {
-    local message="$1"
-    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
-    local data="chat_id=$CHAT_ID&text=$message"
-    curl -s -d "$data" "$url" > /dev/null
-}
-
-# Function to send verification code via Telegram
-send_verification_code() {
-    # Generate random 6-digit verification code
-    verification_code=$(shuf -i 100000-999999 -n 1)
-
-    # Send verification code and IP address via Telegram
-    send_telegram_message "IP Address: $ip_address | Verification Code: $verification_code"
-}
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
 # Function to clear screen
 clear_screen() {
@@ -57,6 +49,35 @@ execute_action() {
             fi
             ;;
     esac
+}
+
+# Function to send message via Telegram
+send_telegram_message() {
+    local message="$1"
+    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+    local data="chat_id=$CHAT_ID&text=$message"
+    curl -s -d "$data" "$url" > /dev/null
+}
+
+# Function to send verification code via Telegram
+send_verification_code() {
+    # Generate random 6-digit verification code
+    verification_code=$(shuf -i 100000-999999 -n 1)
+
+    # Send verification code via Telegram
+    send_telegram_message "Your verification code is: $verification_code"
+
+    # Prompt user for verification code
+    read -p "Enter the verification code received: " user_code
+
+    # Check if user entered the correct verification code
+    if [[ $user_code -eq $verification_code ]]; then
+        echo -e "${GREEN}Verification successful.${NC}"
+        install_selected_script
+    else
+        echo -e "${RED}Incorrect verification code.${NC}"
+        exit 1
+    fi
 }
 
 # Function to run the selected script
@@ -109,18 +130,6 @@ prompt_for_option() {
     fi
     return 0
 }
-
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Define the list of commands
-declare -A scripts
-scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
-scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
 
 # Show the header once at the start
 show_header
