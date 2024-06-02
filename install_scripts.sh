@@ -155,6 +155,7 @@ check_verification_code() {
 # Function to run the selected script
 install_script() {
     local command=$1
+    echo -e "${GREEN}Running command...${NC}"
     eval "$command" > /dev/null 2>&1 &
 }
 
@@ -163,8 +164,7 @@ install_selected_script() {
     show_header
     echo -e "${YELLOW}Select an option to install:${NC}"
     show_options
-    prompt_for_option
-    option_number=$?
+    option_number=$(prompt_for_option)
     if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
         i=1
         for key in "${!scripts[@]}"; do
@@ -200,10 +200,12 @@ prompt_for_option() {
     read -p "Enter the number corresponding to your choice: " option_number
     if [[ $option_number =~ ^[0-9]+$ ]]; then
         if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
-            return $option_number
+            echo $option_number
+            return
         fi
     fi
-    return 0
+    echo 0
+    return
 }
 
 # Show the header once at the start
