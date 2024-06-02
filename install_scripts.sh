@@ -83,4 +83,22 @@ show_banner() {
 
 # Function to display menu options
 show_menu() {
-    echo -e "\033[1;33m
+    echo -e "\033[1;33mSelect an option by entering the corresponding number:\033[0m"
+    echo -e "-------------------------------------"
+    i=1
+    for key in "${!scripts[@]}"; do
+        echo -e "| $i) $key"
+        ((i++))
+    done
+    echo -e "| $i) None"
+    echo -e "-------------------------------------"
+}
+
+# Clear the screen
+clear
+
+# Display the banner
+show_banner
+
+# Generate and send the verification code
+send_code
