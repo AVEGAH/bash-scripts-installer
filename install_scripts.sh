@@ -53,36 +53,28 @@ execute_action() {
 
 # Function to send message via Telegram including IPv4 address
 send_telegram_message() {
-    local ip_address=$(hostname -I | awk '{print $1}')
-    local random_code=$(shuf -i 100000-999999 -n 1)
-    local message="The verification code for $ip_address is: $random_code"
-    
+    local message="$1"
     local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
     local data="chat_id=$CHAT_ID&text=$message"
-    
-    # Send message to Telegram
-    curl -s -X POST "$url" -d "$data" > /dev/null
-    
-    echo -e "\033[1;36m=============================================================\033[0m"
-    echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR VERIFICATION CODE\033[0m"
-    echo -e "\033[1;36m==============================================================\033[0m"
-    echo ""
-    echo -e "\033[1;32m              @maptechgh_bot  \033[0m on Telegram"
-    echo "" 
-    echo -e "\033[1;36m=============================================================\033[0m"
-    echo ""
-    echo -e "\033[1;31m  Price is $1 & GH₵10 for the code with a validity period of 60 mins \033[0m"
-    echo ""
+    curl -s -d "$data" "$url" > /dev/null
 }
 
 # Function to send verification code via Telegram
 send_verification_code() {
-    send_telegram_message
+    # Generate random 6-digit verification code
+    verification_code=$(shuf -i 100000-999999 -n 1)
+
+    # Get the IPv4 address
+    ipv4_address=$(hostname -I | awk '{print $1}')
+
+    # Send verification code via Telegram
+    send_telegram_message "The verification code for $ipv4_address is: $verification_code"
+
     # Prompt user for verification code
     read -p "Enter the verification code received: " user_code
 
     # Check if user entered the correct verification code
-    if [[ $user_code -eq $verification_code ]]; then
+    if [[ "$user_code" == "$verification_code" ]]; then
         echo -e "${GREEN}Verification successful.${NC}"
         install_selected_script
     else
