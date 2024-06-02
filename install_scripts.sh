@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Telegram bot token and chat ID
-BOT_TOKEN="6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lC"
+BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
 CHAT_ID="5989863155"
 
 # Define the list of commands
