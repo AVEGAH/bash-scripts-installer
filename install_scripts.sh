@@ -139,7 +139,6 @@ send_verification_code() {
     fi
 }
 
-
 # Function to check the verification code entered by the user
 check_verification_code() {
     local user_code=$1
