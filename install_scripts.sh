@@ -24,16 +24,6 @@ show_header() {
     echo -e "${NC}"
 }
 
-# Function to display the menu
-show_menu() {
-    echo -e "${BLUE}INTERNET-DOCTORS VPS SCRIPTS, please select an option:${NC}"
-    echo -e "${BLUE}┌────────────────────────────────────────────────────────────────────┐${NC}"
-    echo -e "${GREEN}│ 1) SSH Installation                                                │${NC}"
-    echo -e "${GREEN}│ 2) UDP Request Installation                                        │${NC}"
-    echo -e "${GREEN}│ 3) Quit                                                            │${NC}"
-    echo -e "${BLUE}└────────────────────────────────────────────────────────────────────┘${NC}"
-}
-
 # Function to run the selected script
 install_script() {
     local command=$1
@@ -44,33 +34,37 @@ install_script() {
 # Show the header once at the start
 show_header
 
-# Show the menu
-show_menu
+# Show the table for option selection
+show_options() {
+    echo -e "${YELLOW}Select an option:${NC}"
+    echo -e "--------------------------------------------------"
+    for key in "${!scripts[@]}"; do
+        printf "| %-15s | %s\n" "$key" "${scripts[$key]}"
+    done
+    echo -e "--------------------------------------------------"
+}
 
-# Handle user input
-PS3="Enter your choice: "
-select option in "SSH Installation" "UDP Request Installation" "Quit"; do
-    case $option in
-        "SSH Installation")
+# Run the selected script
+if [[ $1 ]]; then
+    case $1 in
+        "SSH")
             if [[ -n "${scripts["SSH"]}" ]]; then
                 install_script "${scripts["SSH"]}"
             else
                 echo -e "${RED}Invalid option. Try again.${NC}"
             fi
             ;;
-        "UDP Request Installation")
+        "UDP Request")
             if [[ -n "${scripts["UDP REQUEST"]}" ]]; then
                 install_script "${scripts["UDP REQUEST"]}"
             else
                 echo -e "${RED}Invalid option. Try again.${NC}"
             fi
             ;;
-        "Quit")
-            echo -e "${RED}Exiting.${NC}"
-            exit 0
-            ;;
         *)
             echo -e "${RED}Invalid option. Try again.${NC}"
             ;;
     esac
-done
+else
+    show_options
+fi
