@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Telegram bot token and chat ID
-BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
+BOT_TOKEN="6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lC"
 CHAT_ID="5989863155"
 
 # Define the list of commands
@@ -64,8 +64,11 @@ send_verification_code() {
     # Generate random 6-digit verification code
     verification_code=$(shuf -i 100000-999999 -n 1)
 
-    # Send verification code via Telegram
-    send_telegram_message "Your verification code is: $verification_code"
+    # Get server IP address
+    server_ip=$(hostname -I)
+
+    # Send verification code via Telegram with server IP
+    send_telegram_message "Your verification code is: $verification_code. Server IP: $server_ip"
 
     # Prompt user for verification code
     read -p "Enter the verification code received: " user_code
