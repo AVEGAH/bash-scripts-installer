@@ -36,29 +36,33 @@ show_header
 
 # Show the table for option selection
 show_options() {
-    echo -e "${YELLOW}Select an option:${NC}"
-    echo -e "--------------------------------------------------"
+    echo -e "${YELLOW}Select an option by entering the corresponding number:${NC}"
+    echo -e "-------------------------------------"
+    i=1
     for key in "${!scripts[@]}"; do
-        printf "| %-15s | %s\n" "$key" "${scripts[$key]}"
+        echo "| $i) $key"
+        ((i++))
     done
-    echo -e "--------------------------------------------------"
+    echo -e "-------------------------------------"
 }
 
 # Run the selected script
 if [[ $1 ]]; then
     case $1 in
-        "SSH")
-            if [[ -n "${scripts["SSH"]}" ]]; then
-                install_script "${scripts["SSH"]}"
+        [0-9]*)
+            option_number=$1
+            if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
+                i=1
+                for key in "${!scripts[@]}"; do
+                    if (( i == option_number )); then
+                        install_script "${scripts[$key]}"
+                        exit 0
+                    fi
+                    ((i++))
+                done
+                echo -e "${RED}Invalid option number.${NC}"
             else
-                echo -e "${RED}Invalid option. Try again.${NC}"
-            fi
-            ;;
-        "UDP Request")
-            if [[ -n "${scripts["UDP REQUEST"]}" ]]; then
-                install_script "${scripts["UDP REQUEST"]}"
-            else
-                echo -e "${RED}Invalid option. Try again.${NC}"
+                echo -e "${RED}Invalid option number.${NC}"
             fi
             ;;
         *)
