@@ -16,6 +16,10 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# Verification storage directory and file
+VCHECK_DIR="vcheck"
+VCHECK_FILE="$VCHECK_DIR/storage.txt"
+
 # Function to clear screen
 clear_screen() {
     clear
@@ -71,6 +75,16 @@ send_verification_code() {
     # Get the IPv4 address
     ipv4_address=$(hostname -I | awk '{print $1}')
 
+    # Create the vcheck directory and storage file if they do not exist
+    mkdir -p "$VCHECK_DIR"
+    touch "$VCHECK_FILE"
+
+    # Check if there's a recent request from the same IP address
+    if grep -q "$ipv4_address" "$VCHECK_FILE"; then
+        echo -e "${RED}A recent request has been made from this IP address. Please try again later.${NC}"
+        exit 1
+    fi
+
     # Send verification code via Telegram
     send_telegram_message "The verification code for $ipv4_address is: $verification_code"
 
@@ -92,6 +106,8 @@ send_verification_code() {
     # Check if user entered the correct verification code
     if [[ "$user_code" == "$verification_code" ]]; then
         echo -e "${GREEN}Verification successful.${NC}"
+        # Store the code along with the IP address in the storage file
+        echo "$ipv4_address $verification_code" >> "$VCHECK_FILE"
         install_selected_script
     else
         echo -e "${RED}Incorrect verification code.${NC}"
