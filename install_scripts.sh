@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Set this variable to true to enable entering verification codes, or false to disable it
+ENABLE_VERIFICATION_CODE=false
+
 # Telegram bot token and chat ID
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
 CHAT_ID="5989863155"
