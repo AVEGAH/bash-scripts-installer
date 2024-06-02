@@ -2,7 +2,7 @@
 
 # Telegram bot token and chat ID
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
-CHAT_ID="5989863155"
+CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
 
 # Define the list of commands
 declare -A scripts
@@ -63,7 +63,7 @@ execute_action() {
 send_telegram_message() {
     local message="$1"
     local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
-    local data="chat_id=$CHAT_ID&text=$message"
+    local data="chat_id=$CHANNEL_ID&text=$message"
     curl -s -d "$data" "$url" > /dev/null
 }
 
@@ -100,7 +100,7 @@ send_verification_code() {
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
-        echo -e "\033[1;32m              @wmaptechgh_bot  \033[0m on Telegram"
+        echo -e "\033[1;32m              t.me/wmaptechvpsscriptbot  \033[0m on Telegram"
         echo ""
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
@@ -117,11 +117,11 @@ send_verification_code() {
     echo -e "\033[1;31m          ALL IN ONE VPS SCRIPT INSTALLATION\033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;32m              t.me/maptechghbot  \033[0m on Telegram"
+    echo -e "\033[1;32m              t.me/wmaptechvpsscriptbot  \033[0m on Telegram"
     echo ""
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  Message us on telegram for the verification code \033[0m"
+    echo -e "\033[1;31m  Get the verication code from our telegram bot {T & C}  \033[0m"
     echo ""
 
     # Prompt user for verification code
@@ -152,7 +152,7 @@ check_verification_code() {
     fi
 }
 
-# Function to run the selected script
+# Function to install the selected script
 install_script() {
     local command=$1
     echo -e "${GREEN}Running command: $command${NC}"
@@ -171,7 +171,6 @@ install_selected_script() {
         for key in "${!scripts[@]}"; do
             if (( i == option_number )); then
                 install_script "${scripts[$key]}"
-                exit 0
             fi
             ((i++))
         done
