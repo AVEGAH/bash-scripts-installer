@@ -9,6 +9,7 @@ declare -A scripts
 scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
 scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
 scripts["hiddify"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
+scripts["auto script"]="sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/AVEGAH/AutoScriptXray/master/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh"
 
 # Colors
 RED='\033[0;31m'
@@ -94,7 +95,7 @@ send_verification_code() {
 
         # Convert remaining time to minutes and seconds
         local minutes=$((time_left / 60))
-        local seconds=$((time_left % 60))
+               local seconds=$((time_left % 60))
 
        # Display the message with the remaining time
         echo -e "\033[1;36m======================================================================================\033[0m"
