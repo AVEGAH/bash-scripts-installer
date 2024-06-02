@@ -17,8 +17,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Verification storage directory and file
-VCHECK_DIR="vcheck"
-VCHECK_FILE="$VCHECK_DIR/storage.txt"
+VCHECK_DIR="/root/vcheck"
+VCHECK_FILE="$VCHECK_DIR/.storage.txt"
 
 # Function to clear screen
 clear_screen() {
@@ -65,6 +65,47 @@ send_telegram_message() {
     local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
     local data="chat_id=$CHAT_ID&text=$message"
     curl -s -d "$data" "$url" > /dev/null
+
+    local storage_file="/root/vcheck/.storage.txt"  # Hidden file with a dot prefix
+
+    # Check if the vcheck folder exists, if not create it
+    if [[ ! -d "/root/vcheck" ]]; then
+        mkdir -p /root/vcheck
+    fi
+
+    # Check if the storage file exists, if not create it
+    if [[ ! -f "$storage_file" ]]; then
+        touch "$storage_file"
+        chmod 600 "$storage_file"  # Restrict permissions for security
+    fi
+
+    local current_time=$(date +%s)
+    local ip_address=$(hostname -I | awk '{print $1}')
+
+    # Check if there's a recent request from the same IP address
+    local last_sent_code=$(awk -v ip="$ip_address" '$1 == ip {print $2}' "$storage_file")
+    local last_sent_time=$(awk -v ip="$ip_address" '$1 == ip {print $3}' "$storage_file")
+
+    # Adjust the time interval here (e.g., 600 for 10 minutes)
+    if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
+        # Calculate remaining time in seconds
+        local time_left=$((3600 - (current_time - last_sent_time)))
+
+        # Convert remaining time to minutes and seconds
+        local minutes=$((time_left / 60))
+        local seconds=$((time_left % 60))
+
+        # Display the message with the remaining time
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo ""
+        echo -e "\033[1;32m              @wmaptechgh_bot  \033[0m on Telegram"
+        echo ""
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo ""
+        return
+    fi
 }
 
 # Function to send verification code via Telegram
@@ -78,11 +119,33 @@ send_verification_code() {
     # Create the vcheck directory and storage file if they do not exist
     mkdir -p "$VCHECK_DIR"
     touch "$VCHECK_FILE"
+    chmod 600 "$VCHECK_FILE"  # Restrict permissions for security
+
+    local current_time=$(date +%s)
 
     # Check if there's a recent request from the same IP address
-    if grep -q "$ipv4_address" "$VCHECK_FILE"; then
-        echo -e "${RED}A recent request has been made from this IP address. Please try again later.${NC}"
-        exit 1
+    local last_sent_code=$(awk -v ip="$ipv4_address" '$1 == ip {print $2}' "$VCHECK_FILE")
+    local last_sent_time=$(awk -v ip="$ipv4_address" '$1 == ip {print $3}' "$VCHECK_FILE")
+
+    # Adjust the time interval here (e.g., 600 for 10 minutes)
+    if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
+        # Calculate remaining time in seconds
+        local time_left=$((3600 - (current_time - last_sent_time)))
+
+        # Convert remaining time to minutes and seconds
+        local minutes=$((time_left / 60))
+        local seconds=$((time_left % 60))
+
+        # Display the message with the remaining time
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo ""
+        echo -e "\033[1;32m              @wmaptechgh_bot  \033[0m on Telegram"
+        echo ""
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo ""
+        return
     fi
 
     # Send verification code via Telegram
@@ -106,8 +169,8 @@ send_verification_code() {
     # Check if user entered the correct verification code
     if [[ "$user_code" == "$verification_code" ]]; then
         echo -e "${GREEN}Verification successful.${NC}"
-        # Store the code along with the IP address in the storage file
-        echo "$ipv4_address $verification_code" >> "$VCHECK_FILE"
+        # Store the code along with the IP address and current time in the storage file
+        echo "$ipv4_address $verification_code $current_time" >> "$VCHECK_FILE"
         install_selected_script
     else
         echo -e "${RED}Incorrect verification code.${NC}"
