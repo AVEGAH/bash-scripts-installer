@@ -70,6 +70,18 @@ send_verification_code() {
     # Send verification code via Telegram
     send_telegram_message "The verification code for $ipv4_address is: $verification_code"
 
+    # Display contact information for verification code
+    echo -e "\033[1;36m=============================================================\033[0m"
+    echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR VERIFICATION CODE\033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
+    echo ""
+    echo -e "\033[1;32m              @maptechgh_bot  \033[0m on Telegram"
+    echo ""
+    echo -e "\033[1;36m=============================================================\033[0m"
+    echo ""
+    echo -e "\033[1;31m  Price is $1 & GH₵10 for the code with a validity period of 60 mins \033[0m"
+    echo ""
+
     # Prompt user for verification code
     read -p "Enter the verification code received: " user_code
 
