@@ -63,7 +63,7 @@ execute_action() {
 send_telegram_message() {
     local message="$1"
     local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
-    local data="chat_id=$CHAT_ID&text=$message"
+    local data="chat_id=$CHANNEL_ID&text=$message"
     curl -s -d "$data" "$url" > /dev/null
 }
 
@@ -138,6 +138,7 @@ send_verification_code() {
         send_verification_code
     fi
 }
+
 
 # Function to check the verification code entered by the user
 check_verification_code() {
