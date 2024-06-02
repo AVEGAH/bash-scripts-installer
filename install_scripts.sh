@@ -1,4 +1,25 @@
-# Define functions
+#!/bin/bash
+
+# Telegram bot token and chat ID
+BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
+CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
+
+# Define the list of commands
+declare -A scripts
+scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
+scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Verification storage directory and file
+VCHECK_DIR="/root/vcheck"
+VCHECK_FILE="$VCHECK_DIR/.storage.txt"
+
 # Function to clear screen
 clear_screen() {
     clear
@@ -17,11 +38,25 @@ show_header() {
     echo -e "${NC}"
 }
 
-# Function to run the selected script
-install_script() {
-    local command=$1
-    echo -e "${GREEN}Running command: $command${NC}"
-    eval "$command"
+# Function to run the selected script or action
+execute_action() {
+    local action=$1
+    case $action in
+        "send_verification_code")
+            send_verification_code
+            ;;
+        "cancel")
+            echo -e "${YELLOW}Installation canceled.${NC}"
+            exit 0
+            ;;
+        *)
+            if [[ ${scripts[$action]} ]]; then
+                install_script "${scripts[$action]}"
+            else
+                echo -e "${RED}Invalid action.${NC}"
+            fi
+            ;;
+    esac
 }
 
 # Function to send message via Telegram including IPv4 address
@@ -104,6 +139,7 @@ send_verification_code() {
     fi
 }
 
+
 # Function to check the verification code entered by the user
 check_verification_code() {
     local user_code=$1
@@ -117,6 +153,13 @@ check_verification_code() {
     fi
 }
 
+# Function to run the selected script
+install_script() {
+    local command=$1
+    echo -e "${GREEN}Running command: $command${NC}"
+    eval "$command"
+}
+
 # Function to install the selected script
 install_selected_script() {
     show_header
@@ -128,7 +171,7 @@ install_selected_script() {
         i=1
         for key in "${!scripts[@]}"; do
             if (( i == option_number )); then
-                execute_action "${key}"  # Execute the selected action directly
+                install_script "${scripts[$key]}"
                 exit 0
             fi
             ((i++))
@@ -137,20 +180,8 @@ install_selected_script() {
             execute_action "cancel"
         fi
     else
-            echo -e "${RED}Invalid option number.${NC}"
+        echo -e "${RED}Invalid option number.${NC}"
         exit 1
-    fi
-}
-
-# Function to execute an action
-execute_action() {
-    local action=$1
-    if [[ "$action" == "cancel" ]]; then
-        echo -e "${RED}Operation cancelled.${NC}"
-        exit 0
-    else
-        echo -e "${GREEN}Installing $action...${NC}"
-        install_script "${scripts[$action]}"
     fi
 }
 
@@ -182,4 +213,3 @@ show_header
 
 # Send verification code via Telegram
 send_verification_code
-
