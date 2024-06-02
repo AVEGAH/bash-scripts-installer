@@ -5,7 +5,6 @@ ip_address=$(hostname -I | awk '{print $1}')
 
 # Function to send verification code to multiple Telegram handles using different APIs
 send_code_telegram() {
-    local telegram_handle=$1
     local current_time=$(date +%s)
     local storage_file="/root/vcheck/.storage.txt"  # Hidden file with a dot prefix
 
@@ -70,26 +69,18 @@ send_code_telegram() {
     echo ""
 }
 
-bot_tokens=("6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lCE" "6385883860:AAHh-FUlhznqClppdunC2V2vinc298E17_E")
-chat_ids=("5989863155" "6785630391")
+# Define menu options
+declare -A scripts
+scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
+scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
 
-clear
-
-# Generate and send the verification code
-send_code_telegram
-
-# Prompt the user to enter the verification code
-echo -n -e "\033[1;33m  ENTER VERIFICATION CODE: \033[0m"
-read user_code
-last_sent=$(awk -v ip="$ip_address" '$1 == ip {print $2}' "/root/vcheck/.storage.txt")
-
-# Compare the entered code with the generated code
-if [[ -z "$user_code" || "$user_code" != "$last_sent" ]]; then
+# Function to display the banner
+show_banner() {
+    echo -e "\033[1;34mMAPTECH VPS SCRIPTS\033[0m"
+    echo -e "\033[1;33mContact MAPTECH for verification code on Telegram: t.me/maptechghbot\033[0m"
     echo ""
-    echo -e "\033[1;35mInvalid code. Installation aborted.\033[0m"
-    echo ""
-    exit 1
-else
-    rm -rf /root/vcheck
-fi
-clear
+}
+
+# Function to display menu options
+show_menu() {
+    echo -e "\033[1;33m
