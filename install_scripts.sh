@@ -101,4 +101,7 @@ clear
 show_banner
 
 # Generate and send the verification code
-send_code
+send_code_telegram
+
+# Display menu options
+show_menu
