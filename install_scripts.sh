@@ -135,3 +135,4 @@ run_selected_script() {
     if (( option_number <= ${#scripts[@]} )); then
         i=1
         for key in "${!scripts[@]}"; do
+            if ((
