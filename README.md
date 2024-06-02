@@ -19,4 +19,11 @@ This repository contains a script to help you choose and run different Bash scri
    ```bash
    ./install_scripts.sh
 
+## ALL IN :
+4. Run script
+   ```bash
+   git clone https://github.com/AVEGAH/bash-scripts-installer.git
+   cd bash-scripts-installer
+   chmod +x install_scripts.sh
+   ./install_scripts.sh
 
