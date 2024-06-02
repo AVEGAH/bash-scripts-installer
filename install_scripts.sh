@@ -56,11 +56,26 @@ send_telegram_message() {
     local ip_address=$(hostname -I | awk '{print $1}')
     local random_code=$(shuf -i 100000-999999 -n 1)
     local message="The verification code for $ip_address is: $random_code"
-    for ((i=0; i<${#bot_tokens[@]}; i++)); do
-        local bot_token="${bot_tokens[i]}"
-        local chat_id="${chat_ids[i]}"
-        curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
-    done
+    
+    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+    local data="chat_id=$CHAT_ID&text=$message"
+    
+    echo "Sending message to Telegram..."
+    echo "IP Address: $ip_address"
+    echo "Message: $message"
+    echo "URL: $url"
+    echo "Data: $data"
+    
+    response=$(curl -s -X POST "$url" -d "$data")
+    
+    echo "Response: $response"
+    
+    if [[ $response == *'"ok":true'* ]]; then
+        echo "Message sent successfully."
+    else
+        echo "Failed to send message."
+    fi
+    
     echo -e "\033[1;36m=============================================================\033[0m"
     echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR VERIFICATION CODE\033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
