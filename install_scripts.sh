@@ -45,7 +45,7 @@ install_script() {
 show_header
 
 # Show the menu
-show_menu
+
 
 # Handle user input
 PS3="Enter your choice: "
