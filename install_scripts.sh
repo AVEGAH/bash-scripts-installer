@@ -143,8 +143,6 @@ send_verification_code() {
 check_verification_code() {
     local user_code=$1
     local stored_code=$(awk -v ip="$ipv4_address" '$1 == ip {print $2}' "$VCHECK_FILE")
-    echo "Entered Verification Code: $user_code"
-    echo "Stored Verification Code: $stored_code"
     if [[ "$user_code" == "$stored_code" ]]; then
         echo -e "${GREEN}Verification successful.${NC}"
         install_selected_script
@@ -154,3 +152,63 @@ check_verification_code() {
     fi
 }
 
+# Function to run the selected script
+install_script() {
+    local command=$1
+    echo -e "${GREEN}Running command: $command${NC}"
+    eval "$command"
+}
+
+# Function to install the selected script
+install_selected_script() {
+    show_header
+    echo -e "${YELLOW}Select an option to install:${NC}"
+    show_options
+    prompt_for_option
+    option_number=$?
+    if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+        i=1
+        for key in "${!scripts[@]}"; do
+            if (( i == option_number )); then
+                install_script "${scripts[$key]}"
+                exit 0
+            fi
+            ((i++))
+        done
+        if (( option_number == ${#scripts[@]} + 1 )); then
+            execute_action "cancel"
+        fi
+    else
+        echo -e "${RED}Invalid option number.${NC}"
+        exit 1
+    fi
+}
+
+# Show the table for option selection
+show_options() {
+    echo -e "-------------------------------------"
+    i=1
+    for key in "${!scripts[@]}"; do
+        echo "| $i) $key"
+        ((i++))
+    done
+    echo "| $i) Cancel"
+    echo -e "-------------------------------------"
+}
+
+# Prompt user for option selection
+prompt_for_option() {
+    read -p "Enter the number corresponding to your choice: " option_number
+    if [[ $option_number =~ ^[0-9]+$ ]]; then
+        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+            return $option_number
+        fi
+    fi
+    return 0
+}
+
+# Show the header once at the start
+show_header
+
+# Send verification code via Telegram
+send_verification_code
