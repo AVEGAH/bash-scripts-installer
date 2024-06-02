@@ -75,13 +75,13 @@ send_verification_code() {
     send_telegram_message "The verification code for $ipv4_address is: $verification_code"
 
     # Display contact information for verification code
-    echo -e "\033[1;36m=============================================================\033[0m"
-    echo -e "\033[1;31m       ALL IN ONE VPS SCRIPT INSTALLATION\033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
+    echo -e "\033[1;31m          ALL IN ONE VPS SCRIPT INSTALLATION\033[0m"
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
     echo -e "\033[1;32m              t.me/maptechghbot  \033[0m on Telegram"
     echo ""
-    echo -e "\033[1;36m=============================================================\033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
     echo -e "\033[1;31m  Message us on telegram for the verification code \033[0m"
     echo ""
