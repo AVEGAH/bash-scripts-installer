@@ -171,7 +171,7 @@ install_selected_script() {
         i=1
         for key in "${!scripts[@]}"; do
             if (( i == option_number )); then
-                install_script "${scripts[$key]}"
+                execute_action "$key"  # Execute the selected action directly
                 exit 0
             fi
             ((i++))
