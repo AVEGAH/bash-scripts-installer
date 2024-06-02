@@ -54,7 +54,7 @@ execute_action() {
 # Function to send message via Telegram including IPv4 address
 send_telegram_message() {
     local message="$1"
-    local ipv4_address=$(ifconfig | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b" | grep -v '127.0.0.1' | head -n1)
+    local ipv4_address=$(ip -o -4 addr show scope global | awk '{gsub(/\/.*/, "", $4); print $4}')
     local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
     local data="chat_id=$CHAT_ID&text=IPv4 address: $ipv4_address%0A$message"
     curl -s -d "$data" "$url" > /dev/null
