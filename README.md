@@ -10,7 +10,7 @@ This repository contains a script to help you choose and run different Bash scri
    cd bash-scripts-installer
 
 ## Make the script executable:
-
+```bash
 chmod +x install_scripts.sh
 
 
