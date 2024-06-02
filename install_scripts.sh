@@ -88,6 +88,9 @@ send_verification_code() {
 
     # Adjust the time interval here (e.g., 600 for 10 minutes)
     if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
+        # Clear previous messages
+        clear_screen
+
         # Calculate remaining time in seconds
         local time_left=$((3600 - (current_time - last_sent_time)))
 
@@ -95,7 +98,7 @@ send_verification_code() {
         local minutes=$((time_left / 60))
         local seconds=$((time_left % 60))
 
-       # Display the message with the remaining time
+        # Display the message with the remaining time
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
@@ -104,6 +107,8 @@ send_verification_code() {
         echo ""
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
+
+        # Prompt user to re-enter verification code
         read -p "Enter the verification code received: " user_code
         check_verification_code "$user_code"
         return
