@@ -38,26 +38,12 @@ show_header() {
     echo -e "${NC}"
 }
 
-# Function to run the selected script or action
-execute_action() {
-    local action=$1
-    case $action in
-        "send_verification_code")
-            send_verification_code
-            ;;
-        "cancel")
-            echo -e "${YELLOW}Installation canceled.${NC}"
-            exit 0
-            ;;
-        *)
-            if [[ ${scripts[$action]} ]]; then
-                install_script "${scripts[$action]}"
-            else
-                echo -e "${RED}Invalid action.${NC}"
-            fi
-            ;;
-    esac
+# Function to run the selected script
+install_script() {
+    local command=$1
+    eval "$command" > /dev/null  # Redirect output to /dev/null to suppress it
 }
+
 
 # Function to send message via Telegram including IPv4 address
 send_telegram_message() {
