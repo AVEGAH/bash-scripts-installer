@@ -155,8 +155,7 @@ check_verification_code() {
 # Function to run the selected script
 install_script() {
     local command=$1
-    echo -e "${GREEN}Running command: $command${NC}"
-    eval "$command"
+    eval "$command" > /dev/null 2>&1 &
 }
 
 # Function to install the selected script
