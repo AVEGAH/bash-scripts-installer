@@ -26,23 +26,23 @@ show_header() {
 
 # Function to display the menu
 show_menu() {
-    echo -e "${YELLOW}INTERNET-DOCTORS VPS SCRIPTS, please select an option:${NC}"
-    echo -e "┌────────────────────────────────────────────────────────────────────┐"
-    echo -e "│ 1) SSH                                                             │"
-    echo -e "│ 2) UDP REQUEST                                                     │"
-    echo -e "│ 3) Quit                                                            │"
-    echo -e "└────────────────────────────────────────────────────────────────────┘"
+    echo -e "${YELLOW}Welcome to Internet Doctors VPS Scripts. Please select an option:${NC}"
+    echo -e "${BLUE}────────────────────────────────────────────────────────────${NC}"
+    echo -e "${GREEN}1${NC}) ${YELLOW}SSH Installation${NC}"
+    echo -e "${GREEN}2${NC}) ${YELLOW}UDP Request Installation${NC}"
+    echo -e "${GREEN}3${NC}) ${YELLOW}Quit${NC}"
+    echo -e "${BLUE}────────────────────────────────────────────────────────────${NC}"
     PS3="Enter your choice: "
-    select option in "SSH" "UDP REQUEST" "Quit"; do
+    select option in "SSH Installation" "UDP Request Installation" "Quit"; do
         case $option in
-            "SSH")
+            "SSH Installation")
                 if [[ -n "${scripts["SSH"]}" ]]; then
                     install_script "${scripts["SSH"]}"
                 else
                     echo -e "${RED}Invalid option. Try again.${NC}"
                 fi
                 ;;
-            "UDP REQUEST")
+            "UDP Request Installation")
                 if [[ -n "${scripts["UDP REQUEST"]}" ]]; then
                     install_script "${scripts["UDP REQUEST"]}"
                 else
