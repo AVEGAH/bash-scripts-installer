@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set this variable to true to enable entering verification codes, or false to disable it
-ENABLE_VERIFICATION_CODE=false
+ENABLE_VERIFICATION_CODE=true
 
 # Telegram bot token and chat ID
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
@@ -46,7 +46,11 @@ execute_action() {
     local action=$1
     case $action in
         "send_verification_code")
-            send_verification_code
+            if $ENABLE_VERIFICATION_CODE; then
+                send_verification_code
+            else
+                install_selected_script
+            fi
             ;;
         "cancel")
             echo -e "${YELLOW}Installation canceled.${NC}"
@@ -107,8 +111,10 @@ send_verification_code() {
         echo ""
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
-        read -p "Enter the verification code received: " user_code
-        check_verification_code "$user_code"
+        if $ENABLE_VERIFICATION_CODE; then
+            read -p "Enter the verification code received: " user_code
+            check_verification_code "$user_code"
+        fi
         return
     fi
 
@@ -128,17 +134,18 @@ send_verification_code() {
     echo ""
 
     # Prompt user for verification code
-    read -p "Enter the verification code received: " user_code
-
-    # Check if user entered the correct verification code
-    if [[ "$user_code" == "$verification_code" ]]; then
-        echo -e "${GREEN}Verification successful.${NC}"
-        # Store the code along with the IP address and current time in the storage file
-        echo "$ipv4_address $verification_code $current_time" >> "$VCHECK_FILE"
-        install_selected_script
-    else
-        echo -e "${RED}Incorrect verification code.${NC}"
-        send_verification_code
+    if $ENABLE_VERIFICATION_CODE; then
+        read -p "Enter the verification code received: " user_code
+        # Check if user entered the correct verification code
+        if [[ "$user_code" == "$verification_code" ]]; then
+            echo -e "${GREEN}Verification successful.${NC}"
+            # Store the code along with the IP address and current time in the storage file
+            echo "$ipv4_address $verification_code $current_time" >> "$VCHECK_FILE"
+            install_selected_script
+        else
+            echo -e "${RED}Incorrect verification code.${NC}"
+            send_verification_code
+        fi
     fi
 }
 
