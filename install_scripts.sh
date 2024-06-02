@@ -10,6 +10,8 @@ scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubus
 scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
 scripts["hiddify"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
 scripts["auto script"]="sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/AVEGAH/AutoScriptXray/master/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh"
+scripts["Udp custom"]="git clone https://github.com/AVEGAH/Udpcustom.git && cd Udpcustom && chmod +x install.sh && ./install.sh"
+scripts["Udp hysteria"]="wget https://github.com/khaledagn/AGN-UDP/raw/main/install_agnudp.sh; chmod +x install_agnudp.sh; ./install_agnudp.sh; nano /etc/hysteria/config.json"
 
 # Colors
 RED='\033[0;31m'
@@ -95,9 +97,9 @@ send_verification_code() {
 
         # Convert remaining time to minutes and seconds
         local minutes=$((time_left / 60))
-               local seconds=$((time_left % 60))
+        local seconds=$((time_left % 60))
 
-       # Display the message with the remaining time
+        # Display the message with the remaining time
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
@@ -123,7 +125,7 @@ send_verification_code() {
     echo ""
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  Get the verification code from our Telegram bot {T & C}  \033[0m"
+    echo -e "\033[1;31m  Get the verification code from our telegram bot {T & C}  \033[0m"
     echo ""
 
     # Prompt user for verification code
@@ -157,9 +159,33 @@ check_verification_code() {
 # Function to install the selected script
 install_script() {
     local command=$1
-    echo -e "${GREEN}Running command: $command${NC}"
     eval "$command"
 }
+
+# Function to display the menu options
+show_options() {
+    echo "1) SSH"
+    echo "2) UDP REQUEST"
+    echo "3) hiddify"
+    echo "4) auto script"
+    echo "5) Udp custom"
+    echo "6) Udp hysteria"
+    echo "7) Cancel"
+}
+
+# Function to prompt for menu option
+prompt_for_option() {
+    read -p "Enter the number corresponding to your choice: " option
+    return $option
+}
+
+# Function to install the selected script
+install_selected_script() {
+    show_header
+    echo -e "${YELLOW}Select an option to install:${NC}"
+    show_options
+    prompt_for_option
+    option_number=$?
 
 # Function to install the selected script
 install_selected_script() {
