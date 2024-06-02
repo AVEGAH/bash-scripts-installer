@@ -4,6 +4,7 @@
 declare -A scripts
 scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
 scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
+scripts["UDP CUSTOM"]="git clone https://github.com/AVEGAH/Udpcustom.git && cd Udpcustom && chmod +x install.sh && ./install.sh"
 
 # Colors
 RED='\033[0;31m'
@@ -15,12 +16,24 @@ NC='\033[0m' # No Color
 # ASCII Art Header
 show_header() {
     echo -e "${BLUE}"
-    echo ".___  ___.      ___      .______   .___________. _______   ______  __    __  "
-    echo "|   \/   |     /   \     |   _  \  |           ||   ____| /      ||  |  |  | "
-    echo "|  \  /  |    /  ^  \    |  |_)  | `---|  |----`|  |__   |  ,----'|  |__|  | "
-    echo "|  |\/|  |   /  /_\  \   |   ___/      |  |     |   __|  |  |     |   __   | "
-    echo "|  |  |  |  /  _____  \  |  |          |  |     |  |____ |  `----.|  |  |  | "
-    echo "|__|  |__| /__/     \__\ | _|          |__|     |_______| \______||__|  |__| "
+    echo "   __  __ ____   __  __  ____  _____  _    _  _____ _____ _   _ "
+    echo "  |  \/  |  _ \ |  \/  |/ __ \|  __ \| |  | |/ ____|_   _| \ | |"
+    echo "  | \  / | |_) || \  / | |  | | |__) | |  | | (___   | | |  \| |"
+    echo "  | |\/| |  _ < | |\/| | |  | |  ___/| |  | |\___ \  | | | . \` |"
+    echo "  | |  | | |_) || |  | | |__| | |    | |__| |____) |_| |_| |\  |"
+    echo "  |_|  |_|____/ |_|  |_|\____/|_|     \____/|_____/|_____|_| \_|"
+    echo "                                                                "
+    echo "                     INTERNET-DOCTORS VPS SCRIPTS, please select an option:"
+    echo "  ┌────────────────────────────────────────────────────────────────────┐"
+    echo "  │ 1. SSH installation                                                 │"
+    echo "  │ 2. UDP-request installation                                         │"
+    echo "  │ 3. UDP-custom installation                                          │"
+    echo "  └────────────────────────────────────────────────────────────────────┘"
+    echo "                     ----------Created By----------                     "
+    echo "            ┌───────────────────────────────────────────────┐           "
+    echo "            │                  MAPTECH-GH                    │          "
+    echo "            │                @maptechghbot                   │          "
+    echo "            └───────────────────────────────────────────────┘           "
     echo -e "${NC}"
 }
 
