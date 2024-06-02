@@ -43,6 +43,7 @@ show_options() {
         echo "| $i) $key"
         ((i++))
     done
+    echo "| $i) None"
     echo -e "-------------------------------------"
 }
 
@@ -51,16 +52,20 @@ if [[ $1 ]]; then
     case $1 in
         [0-9]*)
             option_number=$1
-            if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
-                i=1
-                for key in "${!scripts[@]}"; do
-                    if (( i == option_number )); then
-                        install_script "${scripts[$key]}"
-                        exit 0
-                    fi
-                    ((i++))
-                done
-                echo -e "${RED}Invalid option number.${NC}"
+            if (( option_number > 0 && option_number <= (${#scripts[@]} + 1) )); then
+                if (( option_number <= ${#scripts[@]} )); then
+                    i=1
+                    for key in "${!scripts[@]}"; do
+                        if (( i == option_number )); then
+                            install_script "${scripts[$key]}"
+                            exit 0
+                        fi
+                        ((i++))
+                    done
+                else
+                    echo "None selected."
+                    exit 0
+                fi
             else
                 echo -e "${RED}Invalid option number.${NC}"
             fi
