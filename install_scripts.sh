@@ -52,7 +52,7 @@ install_script() {
     eval "$command"
 }
 
-# Show the header once at the start
+# Show the header once
 show_header
 
 # Show the menu
