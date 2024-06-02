@@ -2,7 +2,7 @@
 
 # Telegram bot token and chat ID
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
-CHAT_ID="5989863155"
+CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
 
 # Define the list of commands
 declare -A scripts
