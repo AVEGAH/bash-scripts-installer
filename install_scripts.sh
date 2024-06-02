@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Telegram bot token and chat ID
+BOT_TOKEN="6803390472:AAEEX8hpTFhsxbmzU5oiZD4dYCOKxS4-lC"
+CHAT_ID="5989863155"
+
 # Define the list of commands
 declare -A scripts
 scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
@@ -47,13 +51,21 @@ execute_action() {
     esac
 }
 
+# Function to send message via Telegram
+send_telegram_message() {
+    local message="$1"
+    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+    local data="chat_id=$CHAT_ID&text=$message"
+    curl -s -d "$data" "$url" > /dev/null
+}
+
 # Function to send verification code via Telegram
 send_verification_code() {
     # Generate random 6-digit verification code
     verification_code=$(shuf -i 100000-999999 -n 1)
 
-    # Replace the following line with your code to send the verification code via Telegram
-    echo "Sending verification code $verification_code via Telegram..."
+    # Send verification code via Telegram
+    send_telegram_message "Your verification code is: $verification_code"
 
     # Prompt user for verification code
     read -p "Enter the verification code received: " user_code
@@ -61,6 +73,7 @@ send_verification_code() {
     # Check if user entered the correct verification code
     if [[ $user_code -eq $verification_code ]]; then
         echo -e "${GREEN}Verification successful.${NC}"
+        install_selected_script
     else
         echo -e "${RED}Incorrect verification code.${NC}"
         exit 1
@@ -74,37 +87,10 @@ install_script() {
     eval "$command"
 }
 
-# Show the header once at the start
-show_header
-
-# Show the table for option selection
-show_options() {
-    echo -e "${YELLOW}Select an option by entering the corresponding number:${NC}"
-    echo -e "-------------------------------------"
-    i=1
-    for key in "${!scripts[@]}"; do
-        echo "| $i) $key"
-        ((i++))
-    done
-    echo -e "| $i) Verification Code"
-    echo -e "-------------------------------------"
-}
-
-# Prompt user for option selection
-prompt_for_option() {
-    read -p "Enter the number corresponding to your choice: " option_number
-    if [[ $option_number =~ ^[0-9]+$ ]]; then
-        if (( option_number > 0 && option_number <= (${#scripts[@]} + 1) )); then
-            return $option_number
-        fi
-    fi
-    return 0
-}
-
-# Run the selected action
-if [[ $1 ]]; then
-    execute_action $1
-else
+# Function to install the selected script
+install_selected_script() {
+    show_header
+    echo -e "${YELLOW}Select an option to install:${NC}"
     show_options
     prompt_for_option
     option_number=$?
@@ -117,9 +103,36 @@ else
             fi
             ((i++))
         done
-    elif (( option_number == ${#scripts[@]} + 1 )); then
-        execute_action "send_verification_code"
     else
         echo -e "${RED}Invalid option number.${NC}"
+        exit 1
     fi
-fi
+}
+
+# Show the table for option selection
+show_options() {
+    echo -e "-------------------------------------"
+    i=1
+    for key in "${!scripts[@]}"; do
+        echo "| $i) $key"
+        ((i++))
+    done
+    echo -e "-------------------------------------"
+}
+
+# Prompt user for option selection
+prompt_for_option() {
+    read -p "Enter the number corresponding to your choice: " option_number
+    if [[ $option_number =~ ^[0-9]+$ ]]; then
+        if (( option_number > 0 && option_number <= ${#scripts[@]} )); then
+            return $option_number
+        fi
+    fi
+    return 0
+}
+
+# Show the header once at the start
+show_header
+
+# Send verification code via Telegram
+send_verification_code
