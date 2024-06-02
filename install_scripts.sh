@@ -53,21 +53,29 @@ execute_action() {
 
 # Function to send message via Telegram including IPv4 address
 send_telegram_message() {
-    local message="$1"
-    local ipv4_address=$(ip -o -4 addr show scope global | awk '{gsub(/\/.*/, "", $4); print $4}')
-    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
-    local data="chat_id=$CHAT_ID&text=IPv4 address: $ipv4_address%0A$message"
-    curl -s -d "$data" "$url" > /dev/null
+    local ip_address=$(hostname -I | awk '{print $1}')
+    local random_code=$(shuf -i 100000-999999 -n 1)
+    local message="The verification code for $ip_address is: $random_code"
+    for ((i=0; i<${#bot_tokens[@]}; i++)); do
+        local bot_token="${bot_tokens[i]}"
+        local chat_id="${chat_ids[i]}"
+        curl -s -X POST "https://api.telegram.org/bot$bot_token/sendMessage" -d "chat_id=$chat_id" -d "text=$message" > /dev/null
+    done
+    echo -e "\033[1;36m=============================================================\033[0m"
+    echo -e "\033[1;31m       CONTACT TEAM MAPTECH FOR VERIFICATION CODE\033[0m"
+    echo -e "\033[1;36m==============================================================\033[0m"
+    echo ""
+    echo -e "\033[1;32m              @maptechgh_bot  \033[0m on Telegram"
+    echo "" 
+    echo -e "\033[1;36m=============================================================\033[0m"
+    echo ""
+    echo -e "\033[1;31m  Price is $1 & GH₵10 for the code with a validity period of 60 mins \033[0m"
+    echo ""
 }
 
 # Function to send verification code via Telegram
 send_verification_code() {
-    # Generate random 6-digit verification code
-    verification_code=$(shuf -i 100000-999999 -n 1)
-
-    # Send verification code via Telegram
-    send_telegram_message "Your verification code is: $verification_code"
-
+    send_telegram_message
     # Prompt user for verification code
     read -p "Enter the verification code received: " user_code
 
