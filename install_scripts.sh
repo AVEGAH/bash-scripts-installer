@@ -4,6 +4,9 @@
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
 CHAT_ID="5989863155"
 
+# Global variable for IP address
+ip_address=""
+
 # Function to send message via Telegram
 send_telegram_message() {
     local message="$1"
@@ -17,11 +20,8 @@ send_verification_code() {
     # Generate random 6-digit verification code
     verification_code=$(shuf -i 100000-999999 -n 1)
 
-    # Get server IP address
-    server_ip=$(hostname -I | grep -Eo '^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)' | grep -vE '^127(\.[0-9]{1,3}){3}|^10(\.[0-9]{1,3}){3}|^192\.168(\.[0-9]{1,3}){2}|^172\.(1[6-9]|2[0-9]|3[0-1])(\.[0-9]{1,3}){2}')
-
     # Send verification code and IP address via Telegram
-    send_telegram_message "Your verification code is: $verification_code. Server IP: $server_ip"
+    send_telegram_message "IP Address: $ip_address | Verification Code: $verification_code"
 }
 
 # Function to clear screen
