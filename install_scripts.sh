@@ -26,7 +26,6 @@ show_header() {
 
 # Function to display the menu
 show_menu() {
-    show_header
     echo -e "${YELLOW}Choose a script to install:${NC}"
     PS3="Enter your choice: "
     select option in "${!scripts[@]}" "Quit"; do
@@ -52,6 +51,9 @@ install_script() {
     echo -e "${GREEN}Running command: $command${NC}"
     eval "$command"
 }
+
+# Show the header once at the start
+show_header
 
 # Show the menu
 show_menu
