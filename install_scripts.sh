@@ -8,10 +8,9 @@ CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
 declare -A scripts
 scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
 scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
-scripts["hiddify"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
-scripts["auto script"]="sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/AVEGAH/AutoScriptXray/master/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh"
-scripts["Udp custom"]="git clone https://github.com/AVEGAH/Udpcustom.git && cd Udpcustom && chmod +x install.sh && ./install.sh"
-scripts["Udp hysteria"]="wget https://github.com/khaledagn/AGN-UDP/raw/main/install_agnudp.sh; chmod +x install_agnudp.sh; ./install_agnudp.sh; nano /etc/hysteria/config.json"
+scripts["UDP CUSTOM"]="git clone https://github.com/AVEGAH/Udpcustom.git && cd Udpcustom && chmod +x install.sh && ./install.sh"
+scripts["UDP HYSTERIA"]="wget https://github.com/khaledagn/AGN-UDP/raw/main/install_agnudp.sh; chmod +x install_agnudp.sh; ./install_agnudp.sh; nano /etc/hysteria/config.json"
+scripts["HIDDIFY NEXT"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
 
 # Colors
 RED='\033[0;31m'
@@ -99,7 +98,7 @@ send_verification_code() {
         local minutes=$((time_left / 60))
         local seconds=$((time_left % 60))
 
-        # Display the message with the remaining time
+       # Display the message with the remaining time
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
@@ -125,7 +124,7 @@ send_verification_code() {
     echo ""
     echo -e "\033[1;36m==============================================================\033[0m"
     echo ""
-    echo -e "\033[1;31m  Get the verification code from our telegram bot {T & C}  \033[0m"
+    echo -e "\033[1;31m  Get the verification code from our Telegram bot {T & C}  \033[0m"
     echo ""
 
     # Prompt user for verification code
@@ -159,24 +158,8 @@ check_verification_code() {
 # Function to install the selected script
 install_script() {
     local command=$1
+    echo -e "${GREEN}Running command: $command${NC}"
     eval "$command"
-}
-
-# Function to display the menu options
-show_options() {
-    echo "1) SSH"
-    echo "2) UDP REQUEST"
-    echo "3) hiddify"
-    echo "4) auto script"
-    echo "5) Udp custom"
-    echo "6) Udp hysteria"
-    echo "7) Cancel"
-}
-
-# Function to prompt for menu option
-prompt_for_option() {
-    read -p "Enter the number corresponding to your choice: " option
-    return $option
 }
 
 # Function to install the selected script
@@ -186,4 +169,48 @@ install_selected_script() {
     show_options
     prompt_for_option
     option_number=$?
-    if (( option_number > 
+    if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+        i=1
+        for key in "${!scripts[@]}"; do
+            if (( i == option_number )); then
+                install_script "${scripts[$key]}"
+            fi
+            ((i++))
+        done
+        if (( option_number == ${#scripts[@]} + 1 )); then
+            execute_action "cancel"
+        fi
+    else
+        echo -e "${RED}Invalid option number.${NC}"
+        exit 1
+    fi
+}
+
+# Show the table for option selection
+show_options() {
+    echo -e "-------------------------------------"
+    i=1
+    for key in "${!scripts[@]}"; do
+        echo "| $i) $key"
+        ((i++))
+    done
+    echo "| $i) Cancel"
+    echo -e "-------------------------------------"
+}
+
+# Prompt user for option selection
+prompt_for_option() {
+    read -p "Enter the number corresponding to your choice: " option_number
+    if [[ $option_number =~ ^[0-9]+$ ]]; then
+        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+            return $option_number
+        fi
+    fi
+    return 0
+}
+
+# Show the header once at the start
+show_header
+
+# Send verification code via Telegram
+send_verification_code
