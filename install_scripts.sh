@@ -11,7 +11,7 @@ scripts["UDP REQUEST"]="wget https://tinyurl.com/2h9bvm5r; chmod +x UDPserver.sh
 scripts["UDP CUSTOM"]="git clone https://tinyurl.com/2zr5b92m && cd Udpcustom && chmod +x install.sh && ./install.sh"
 scripts["UDP HYSTERIA"]="wget https://tinyurl.com/4h3r9jv2; chmod +x install_agnudp.sh; ./install_agnudp.sh; nano /etc/hysteria/config.json"
 scripts["HIDDIFY NEXT"]="bash <(curl -Ls https://tinyurl.com/2c2y4k9h)"
-scripts["Autoscript"]="rm -f setup.sh && sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/givpn/autoscriptvps/master/setup.sh && chmod +x setup.sh && ./setup.sh"
+scripts["Autoscript"]="sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/AVEGAH/AutoScriptXray/master/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh"
 
 
 # Colors
