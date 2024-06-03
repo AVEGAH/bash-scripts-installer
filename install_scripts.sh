@@ -166,6 +166,7 @@ install_script() {
 
 # Function to install the selected script
 install_selected_script() {
+    clear_screen  # Clear the screen
     show_header
     echo -e "${YELLOW}Select an option to install:${NC}"
     show_options
