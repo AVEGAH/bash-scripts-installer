@@ -105,7 +105,7 @@ send_verification_code() {
         echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
-        echo -e "\033[1;32m              t.me/wmaptechvpsscriptbot  \033[0m on Telegram"
+        echo -e "\033[1;32m              t.me/maptechvpsscriptbot  \033[0m on Telegram"
         echo ""
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
