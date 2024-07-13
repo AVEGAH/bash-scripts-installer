@@ -1,28 +1,4 @@
-#!/bin/bash
-
-# Telegram bot token and chat ID
-BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
-CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
-
-# Define the list of commands
-declare -A scripts
-scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
-scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
-scripts["UDP CUSTOM"]="git clone https://github.com/AVEGAH/Udpcustom.git && cd Udpcustom && chmod +x install.sh && ./install.sh"
-scripts["UDP HYSTERIA"]="wget https://github.com/khaledagn/AGN-UDP/raw/main/install_agnudp.sh; chmod +x install_agnudp.sh; ./install_agnudp.sh; nano /etc/hysteria/config.json"
-scripts["HIDDIFY NEXT"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
-scripts["Autoscript"]="sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/AVEGAH/AutoScriptXray/master/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh"
-
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-# Verification storage directory and file
-VCHECK_DIR="/root/vcheck"
-VCHECK_FILE="$VCHECK_DIR/.storage.txt"
+# b.sh
 
 # Function to clear screen
 clear_screen() {
@@ -212,6 +188,9 @@ prompt_for_option() {
 
 # Show the header once at the start
 show_header
+
+# Source the scripts from GitHub
+source <(curl -sSL "https://raw.githubusercontent.com/AVEGAH/potential-rotary-phone/main/scripts.sh")
 
 # Send verification code via Telegram
 send_verification_code
