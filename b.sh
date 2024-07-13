@@ -187,29 +187,6 @@ install_selected_script() {
     fi
 }
 
-# Show the table for option selection
-show_options() {
-    echo -e "-------------------------------------"
-    i=1
-    for key in "${!scripts[@]}"; do
-        echo "| $i) $key"
-        ((i++))
-    done
-    echo "| $i) Cancel"
-    echo -e "-------------------------------------"
-}
-
-# Prompt user for option selection
-prompt_for_option() {
-    read -p "Enter the number corresponding to your choice: " option_number
-    if [[ $option_number =~ ^[0-9]+$ ]]; then
-        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
-            return $option_number
-        fi
-    fi
-    return 0
-}
-
 # Show the header once at the start
 show_header
 
