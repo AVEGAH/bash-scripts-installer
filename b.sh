@@ -81,7 +81,12 @@ send_verification_code() {
     local last_sent_code=$(awk -v ip="$ipv4_address" '$1 == ip {print $2}' "$VCHECK_FILE")
     local last_sent_time=$(awk -v ip="$ipv4_address" '$1 == ip {print $3}' "$VCHECK_FILE")
 
-    # Adjust the time interval here (e.g., 3600 for 1 hour)
+    # Debugging output to check variable values
+    echo "Last sent code: $last_sent_code"
+    echo "Last sent time: $last_sent_time"
+    echo "Current time: $current_time"
+
+    # Check if there's a recent request from the same IP address
     if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
         # Calculate remaining time in seconds
         local time_left=$((3600 - (current_time - last_sent_time)))
@@ -178,7 +183,7 @@ install_selected_script() {
     fi
 }
 
-# Function to fetch scripts from GitHub repository
+# Fetch the scripts from the GitHub repository
 fetch_scripts() {
     local scripts_url="https://raw.githubusercontent.com/AVEGAH/potential-rotary-phone/main/scripts.sh"
     if curl --output /dev/null --silent --head --fail "$scripts_url"; then
