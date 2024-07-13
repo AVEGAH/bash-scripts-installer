@@ -81,7 +81,7 @@ send_verification_code() {
     local last_sent_code=$(awk -v ip="$ipv4_address" '$1 == ip {print $2}' "$VCHECK_FILE")
     local last_sent_time=$(awk -v ip="$ipv4_address" '$1 == ip {print $3}' "$VCHECK_FILE")
 
-    # Adjust the time interval here (e.g., 600 for 10 minutes)
+    # Adjust the time interval here (e.g., 3600 for 1 hour)
     if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
         # Calculate remaining time in seconds
         local time_left=$((3600 - (current_time - last_sent_time)))
@@ -178,30 +178,7 @@ install_selected_script() {
     fi
 }
 
-# Show the table for option selection
-show_options() {
-    echo -e "-------------------------------------"
-    i=1
-    for key in "${!scripts[@]}"; do
-        echo "| $i) $key"
-        ((i++))
-    done
-    echo "| $i) Cancel"
-    echo -e "-------------------------------------"
-}
-
-# Prompt user for option selection
-prompt_for_option() {
-    read -p "Enter the number corresponding to your choice: " option_number
-    if [[ $option_number =~ ^[0-9]+$ ]]; then
-        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
-            return $option_number
-        fi
-    fi
-    return 0
-}
-
-# Fetch the scripts from the GitHub repository
+# Function to fetch scripts from GitHub repository
 fetch_scripts() {
     local scripts_url="https://raw.githubusercontent.com/AVEGAH/potential-rotary-phone/main/scripts.sh"
     if curl --output /dev/null --silent --head --fail "$scripts_url"; then
