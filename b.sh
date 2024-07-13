@@ -129,7 +129,7 @@ send_verification_code() {
     echo ""
 
     # Prompt user for verification code
-    read -p "Enter the verification code received: " user_code
+    read -p "Enter the verification code received: " user_code $verification_code
 
     # Check if user entered the correct verification code
     if [[ "$user_code" == "$verification_code" ]]; then
