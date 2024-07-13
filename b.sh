@@ -108,7 +108,7 @@ send_verification_code() {
         echo ""
         echo -e "\033[1;36m======================================================================================\033[0m"
         echo ""
-        read -p "Enter the verification code received: " user_code
+        read -p "Enter the verification code received: " user_code$verification_code
         check_verification_code "$user_code"
         return
     fi
