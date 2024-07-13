@@ -54,14 +54,6 @@ execute_action() {
     esac
 }
 
-# Function to send message via Telegram including IPv4 address
-send_telegram_message() {
-    local message="$1"
-    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
-    local data="chat_id=$CHANNEL_ID&text=$message"
-    curl -s -d "$data" "$url" > /dev/null
-}
-
 # Function to send verification code via Telegram
 send_verification_code() {
     # Generate random 6-digit verification code
@@ -87,26 +79,32 @@ send_verification_code() {
     echo "Current time: $current_time"
 
     # Check if there's a recent request from the same IP address
-    if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
+    if [[ -n "$last_sent_code" && -n "$last_sent_time" ]]; then
         # Calculate remaining time in seconds
-        local time_left=$((3600 - (current_time - last_sent_time)))
+        local time_since_last_sent=$((current_time - last_sent_time))
 
-        # Convert remaining time to minutes and seconds
-        local minutes=$((time_left / 60))
-        local seconds=$((time_left % 60))
+        # Check if the time interval is less than 3600 seconds (1 hour)
+        if (( time_since_last_sent < 3600 )); then
+            # Calculate remaining time in seconds
+            local time_left=$((3600 - time_since_last_sent))
 
-        # Display the message with the remaining time
-        echo -e "\033[1;36m======================================================================================\033[0m"
-        echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
-        echo -e "\033[1;36m======================================================================================\033[0m"
-        echo ""
-        echo -e "\033[1;32m              t.me/maptechvpsscriptbot  \033[0m on Telegram"
-        echo ""
-        echo -e "\033[1;36m======================================================================================\033[0m"
-        echo ""
-        read -p "Enter the verification code received: " user_code
-        check_verification_code "$user_code"
-        return
+            # Convert remaining time to minutes and seconds
+            local minutes=$((time_left / 60))
+            local seconds=$((time_left % 60))
+
+            # Display the message with the remaining time
+            echo -e "\033[1;36m======================================================================================\033[0m"
+            echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
+            echo -e "\033[1;36m======================================================================================\033[0m"
+            echo ""
+            echo -e "\033[1;32m              t.me/maptechvpsscriptbot  \033[0m on Telegram"
+            echo ""
+            echo -e "\033[1;36m======================================================================================\033[0m"
+            echo ""
+            read -p "Enter the verification code received: " user_code
+            check_verification_code "$user_code"
+            return
+        fi
     fi
 
     # Send verification code via Telegram
