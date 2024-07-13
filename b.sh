@@ -1,4 +1,19 @@
-# b.sh
+#!/bin/bash
+
+# Telegram bot token and chat ID
+BOT_TOKEN="your_bot_token_here"
+CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Verification storage directory and file
+VCHECK_DIR="/root/vcheck"
+VCHECK_FILE="$VCHECK_DIR/.storage.txt"
 
 # Function to clear screen
 clear_screen() {
@@ -186,11 +201,23 @@ prompt_for_option() {
     return 0
 }
 
+# Fetch the scripts from the GitHub repository
+fetch_scripts() {
+    local scripts_url="https://raw.githubusercontent.com/AVEGAH/potential-rotary-phone/main/scripts.sh"
+    if curl --output /dev/null --silent --head --fail "$scripts_url"; then
+        echo "Fetching scripts from $scripts_url"
+        source <(curl -s "$scripts_url")
+    else
+        echo -e "${RED}Failed to fetch scripts from $scripts_url.${NC}"
+        exit 1
+    fi
+}
+
+# Fetch and source the scripts
+fetch_scripts
+
 # Show the header once at the start
 show_header
-
-# Source the scripts from GitHub
-source <(curl -sSL "https://raw.githubusercontent.com/AVEGAH/potential-rotary-phone/main/scripts.sh")
 
 # Send verification code via Telegram
 send_verification_code
