@@ -1,8 +1,18 @@
+
 #!/bin/bash
 
 # Telegram bot token and chat ID
 BOT_TOKEN="7380565425:AAFFIJ_GOhqWkC4ANzQTEiR06v6CBXtlL7g"
 CHANNEL_ID="-1002148915754"  # Your Telegram channel ID
+
+# Define the list of commands
+declare -A scripts
+scripts["SSH"]="apt-get update -y; apt-get upgrade -y; wget https://raw.githubusercontent.com/AVEGAH/MAPTECH-VPS-MANAGER/main/hehe; chmod 777 hehe; ./hehe"
+scripts["UDP REQUEST"]="wget https://raw.githubusercontent.com/AVEGAH/SocksIP-udpServer/main/UDPserver.sh; chmod +x UDPserver.sh; ./UDPserver.sh"
+scripts["UDP CUSTOM"]="git clone https://github.com/AVEGAH/Udpcustom.git && cd Udpcustom && chmod +x install.sh && ./install.sh"
+scripts["UDP HYSTERIA"]="wget https://github.com/khaledagn/AGN-UDP/raw/main/install_agnudp.sh; chmod +x install_agnudp.sh; ./install_agnudp.sh; nano /etc/hysteria/config.json"
+scripts["HIDDIFY NEXT"]="bash <(curl -Ls https://raw.githubusercontent.com/ozipoetra/z-ui/main/install.sh)"
+scripts["Autoscript"]="sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/AVEGAH/AutoScriptXray/master/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh"
 
 # Colors
 RED='\033[0;31m'
@@ -54,6 +64,14 @@ execute_action() {
     esac
 }
 
+# Function to send message via Telegram including IPv4 address
+send_telegram_message() {
+    local message="$1"
+    local url="https://api.telegram.org/bot$BOT_TOKEN/sendMessage"
+    local data="chat_id=$CHANNEL_ID&text=$message"
+    curl -s -d "$data" "$url" > /dev/null
+}
+
 # Function to send verification code via Telegram
 send_verification_code() {
     # Generate random 6-digit verification code
@@ -73,38 +91,27 @@ send_verification_code() {
     local last_sent_code=$(awk -v ip="$ipv4_address" '$1 == ip {print $2}' "$VCHECK_FILE")
     local last_sent_time=$(awk -v ip="$ipv4_address" '$1 == ip {print $3}' "$VCHECK_FILE")
 
-    # Debugging output to check variable values
-    echo "Last sent code: $last_sent_code"
-    echo "Last sent time: $last_sent_time"
-    echo "Current time: $current_time"
-
-    # Check if there's a recent request from the same IP address
-    if [[ -n "$last_sent_code" && -n "$last_sent_time" ]]; then
+    # Adjust the time interval here (e.g., 600 for 10 minutes)
+    if [[ -n "$last_sent_code" && $((current_time - last_sent_time)) -lt 3600 ]]; then
         # Calculate remaining time in seconds
-        local time_since_last_sent=$((current_time - last_sent_time))
+        local time_left=$((3600 - (current_time - last_sent_time)))
 
-        # Check if the time interval is less than 3600 seconds (1 hour)
-        if (( time_since_last_sent < 3600 )); then
-            # Calculate remaining time in seconds
-            local time_left=$((3600 - time_since_last_sent))
+        # Convert remaining time to minutes and seconds
+        local minutes=$((time_left / 60))
+        local seconds=$((time_left % 60))
 
-            # Convert remaining time to minutes and seconds
-            local minutes=$((time_left / 60))
-            local seconds=$((time_left % 60))
-
-            # Display the message with the remaining time
-            echo -e "\033[1;36m======================================================================================\033[0m"
-            echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
-            echo -e "\033[1;36m======================================================================================\033[0m"
-            echo ""
-            echo -e "\033[1;32m              t.me/maptechvpsscriptbot  \033[0m on Telegram"
-            echo ""
-            echo -e "\033[1;36m======================================================================================\033[0m"
-            echo ""
-            read -p "Enter the verification code received: " user_code
-            check_verification_code "$user_code"
-            return
-        fi
+        # Display the message with the remaining time
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo -e "\033[1;31m  CODE SENT ALREADY! YOU HAVE $minutes MINUTES AND $seconds SECONDS LEFT TO REDEEM IT \033[0m"
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo ""
+        echo -e "\033[1;32m              t.me/maptechvpsscriptbot  \033[0m on Telegram"
+        echo ""
+        echo -e "\033[1;36m======================================================================================\033[0m"
+        echo ""
+        read -p "Enter the verification code received: " user_code
+        check_verification_code "$user_code"
+        return
     fi
 
     # Send verification code via Telegram
@@ -181,20 +188,28 @@ install_selected_script() {
     fi
 }
 
-# Fetch the scripts from the GitHub repository
-fetch_scripts() {
-    local scripts_url="https://raw.githubusercontent.com/AVEGAH/potential-rotary-phone/main/scripts.sh"
-    if curl --output /dev/null --silent --head --fail "$scripts_url"; then
-        echo "Fetching scripts from $scripts_url"
-        source <(curl -s "$scripts_url")
-    else
-        echo -e "${RED}Failed to fetch scripts from $scripts_url.${NC}"
-        exit 1
-    fi
+# Show the table for option selection
+show_options() {
+    echo -e "-------------------------------------"
+    i=1
+    for key in "${!scripts[@]}"; do
+        echo "| $i) $key"
+        ((i++))
+    done
+    echo "| $i) Cancel"
+    echo -e "-------------------------------------"
 }
 
-# Fetch and source the scripts
-fetch_scripts
+# Prompt user for option selection
+prompt_for_option() {
+    read -p "Enter the number corresponding to your choice: " option_number
+    if [[ $option_number =~ ^[0-9]+$ ]]; then
+        if (( option_number > 0 && option_number <= ${#scripts[@]} + 1 )); then
+            return $option_number
+        fi
+    fi
+    return 0
+}
 
 # Show the header once at the start
 show_header
